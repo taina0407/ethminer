@@ -13,6 +13,9 @@
 #if defined(__linux)
 #include <libhwmon/wrapamdsysfs.h>
 #endif
+#include <iostream>
+#include <fstream>
+#include <queue>
 
 #define CL_USE_DEPRECATED_OPENCL_1_2_APIS true
 #define CL_HPP_ENABLE_EXCEPTIONS true
@@ -91,7 +94,8 @@ private:
 	cl::Buffer m_dag;
 	cl::Buffer m_light;
 	cl::Buffer m_header;
-	cl::Buffer m_searchBuffer;
+//	cl::Buffer m_searchBuffer;
+	cl::Buffer m_searchBuffer[c_bufferCount];
 	unsigned m_globalWorkSize = 0;
 	unsigned m_workgroupSize = 0;
 
