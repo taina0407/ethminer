@@ -105,11 +105,11 @@ public:
 		else if (arg == "--token" && i + 1 < argc) {
 			token = argv[++i];
  			minelog << "Minerstat.com Token: " << token;
- 		}		 + 		}
+ 		}	
  		else if (arg == "--worker" && i + 1 < argc) { 
  			worker = argv[++i];
   			minelog << "Minerstat.com Worker: " << worker;
-  		}		 + 		}
+		}
 		else if ((arg == "-FF" || arg == "-SF" || arg == "-FS" || arg == "--farm-failover" || arg == "--stratum-failover") && i + 1 < argc)
 		{
 			string url = argv[++i];
