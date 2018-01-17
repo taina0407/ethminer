@@ -103,12 +103,12 @@ public:
 			m_activeFarmURL = m_farmURL;
 		}
 		else if (arg == "--token" && i + 1 < argc) {
-			token = argv[++i];		 + 			token = argv[++i];
- 			minelog << "Minerstat.com Token: " << token;		 + 			minelog << "Minerstat.com Token: " << token;
+			token = argv[++i];
+ 			minelog << "Minerstat.com Token: " << token;
  		}		 + 		}
- 		else if (arg == "--worker" && i + 1 < argc) { 		 + 		else if (arg == "--worker" && i + 1 < argc) { 
- 			worker = argv[++i];		 + 			worker = argv[++i];
-  			minelog << "Minerstat.com Worker: " << worker;		 + 			minelog << "Minerstat.com Worker: " << worker;
+ 		else if (arg == "--worker" && i + 1 < argc) { 
+ 			worker = argv[++i];
+  			minelog << "Minerstat.com Worker: " << worker;
   		}		 + 		}
 		else if ((arg == "-FF" || arg == "-SF" || arg == "-FS" || arg == "--farm-failover" || arg == "--stratum-failover") && i + 1 < argc)
 		{
