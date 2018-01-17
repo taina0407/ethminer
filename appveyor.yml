@@ -9,10 +9,9 @@ shallow_clone: true
 os: Visual Studio 2015
 configuration:
   - Release
-  - RelWithDebInfo
 environment:
   GITHUB_USER_PASSWORD:
-    secure: VnpF1MH5MEFvUI5MiMMMFlmbDdst+bfom5ZFVgalYPp/SYDhbejjXJm9Dla/IgpC
+    secure: 2gTVGGMJMliuuUYHHzRXSr0nRrESH+GiH4ueNX8wYz/oYAY3DQPXxtPIM89i9TE+Np20LUvZgE4m2ez+wnYPYw==
 
 install: | # Download CUDA Windows installer (local) and extract /compiler/* to /CUDA/vX.0/ zip archive.
   appveyor DownloadFile https://github.com/ethereum/cpp-dependencies/releases/download/cache/CUDA-v9.0-WindowsServer2012.zip
@@ -30,9 +29,6 @@ after_build:
     if ($env:configuration -ne "Release") {
       Get-Item build/ethminer-*-Windows.* | Rename-Item -NewName { $_.name -Replace 'ethminer','ethminer-dbg' }
     }
-    if (-not $env:appveyor_pull_request_number) {
-      cmake --build build --target hunter_upload_cache
-    }
 
 artifacts:
   - path: build/ethminer-*.zip
@@ -47,11 +43,12 @@ deploy:
   tag: $(appveyor_repo_tag_name)
   release: ethminer $(ethminer_version)
   description: ''
-  force_update: true  # Force update in case Travis CI created the release before.
-  prerelease: $(ethminer_version_is_prerelease)
+  force_update: true
+  prerelease: false
   draft: false
   artifact: ethminer
   auth_token:
-    secure: uDRcvbW+9GIyKlZ9guJfWOQ6jg0An6eULg6mEkYgdKn/GVNpYSKvO5oHxP0U8a+e
+    secure: QFhCBzIAZta0dkwQC/+udhDLfwjXAi+h+5hMORucLit4nySjUtGYNF+KYT2uPdYm
   on:
+    branch: master 
     appveyor_repo_tag: true
