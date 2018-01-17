@@ -663,6 +663,7 @@ private:
 		cdebug << genesis.boundary();
 
 		Farm f;
+		Minerstat mst;
 		f.set_pool_addresses(m_farmURL, m_port, m_farmFailOverURL, m_fport);
 		map<string, Farm::SealerDescriptor> sealers;
 #if ETH_ETHASHCL
@@ -727,6 +728,7 @@ private:
 		cdebug << genesis.boundary();
 
 		Farm f;
+		Minerstat mst;
 		f.set_pool_addresses(m_farmURL, m_port, m_farmFailOverURL, m_fport);
 		map<string, Farm::SealerDescriptor> sealers;
 #if ETH_ETHASHCL
@@ -960,6 +962,7 @@ private:
 			m_farmRecheckPeriod = m_defaultStratumFarmRecheckPeriod;
 
 		Farm f;
+		Minerstat mst;
 		f.set_pool_addresses(m_farmURL, m_port, m_farmFailOverURL, m_fport);
 		
 #if API_CORE
