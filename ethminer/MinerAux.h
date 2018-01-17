@@ -45,6 +45,7 @@
 #endif
 #include <jsonrpccpp/client/connectors/httpclient.h>
 #include "FarmClient.h"
+#include "Minerstat.h"
 #if ETH_STRATUM
 #include <libstratum/EthStratumClient.h>
 #include <libstratum/EthStratumClientV2.h>
@@ -101,6 +102,14 @@ public:
 			m_farmURL = argv[++i];
 			m_activeFarmURL = m_farmURL;
 		}
+		else if (arg == "--token" && i + 1 < argc) {
+			token = argv[++i];		 + 			token = argv[++i];
+ 			minelog << "Minerstat.com Token: " << token;		 + 			minelog << "Minerstat.com Token: " << token;
+ 		}		 + 		}
+ 		else if (arg == "--worker" && i + 1 < argc) { 		 + 		else if (arg == "--worker" && i + 1 < argc) { 
+ 			worker = argv[++i];		 + 			worker = argv[++i];
+  			minelog << "Minerstat.com Worker: " << worker;		 + 			minelog << "Minerstat.com Worker: " << worker;
+  		}		 + 		}
 		else if ((arg == "-FF" || arg == "-SF" || arg == "-FS" || arg == "--farm-failover" || arg == "--stratum-failover") && i + 1 < argc)
 		{
 			string url = argv[++i];
@@ -810,6 +819,8 @@ private:
 
 		h256 id = h256::random();
 		Farm f;
+		Minerstat mst;
+		
 		f.set_pool_addresses(m_farmURL, m_port, m_farmFailOverURL, m_fport);
 		
 #if API_CORE
@@ -985,6 +996,8 @@ private:
 				client.reconnect();
 			});
 
+			int last_update_to_monitoring = 0;
+			
 			while (client.isRunning())
 			{
 				auto mp = f.miningProgress(m_show_hwmonitors);
@@ -1007,6 +1020,16 @@ private:
 						client.submitHashrate(toJS(rate));
 					}
 				}
+				
+				int current_time = std::time(0);
+ 				int last_update = current_time - last_update_to_monitoring;
+  
+  				if ((last_update > 5 && mp.rate() > 0) || (mp.rate() == 0 && last_update > 60)) {
+  					minelog << "Updating Minerstat.com stats (" << mp << ")";
+  					last_update_to_monitoring = current_time;
+  					mst.updateStat(token, worker, m_farmURL, mp.rate(), f.getSolutionStats().getAccepts(), f.getSolutionStats().getRejects());
+  				}
+				
 				this_thread::sleep_for(chrono::milliseconds(m_farmRecheckPeriod));
 			}
 		}
@@ -1034,6 +1057,8 @@ private:
 				client.reconnect();
 			});
 
+			int last_update_to_monitoring = 0;
+			
 			while (client.isRunning())
 			{
 				auto mp = f.miningProgress(m_show_hwmonitors);
@@ -1056,6 +1081,16 @@ private:
 						client.submitHashrate(toJS(rate));
 					}
 				}
+				
+				int current_time = std::time(0);
+ 				int last_update = current_time - last_update_to_monitoring;
+  
+  				if ((last_update > 5 && mp.rate() > 0) || (mp.rate() == 0 && last_update > 60)) {
+  					minelog << "Updating Minerstat.com stats (" << mp << ")";
+  					last_update_to_monitoring = current_time;
+  					mst.updateStat(token, worker, m_farmURL, mp.rate(), f.getSolutionStats().getAccepts(), f.getSolutionStats().getRejects());
+  				}
+				
 				this_thread::sleep_for(chrono::milliseconds(m_farmRecheckPeriod));
 			}
 		}
@@ -1102,6 +1137,9 @@ private:
 	string m_farmURL = "http://127.0.0.1:8545";
 	string m_farmFailOverURL = "";
 
+	// Minerstat.com params
+ 	string token = "";
+  	string worker = "";
 
 	string m_activeFarmURL = m_farmURL;
 	unsigned m_farmRetries = 0;
