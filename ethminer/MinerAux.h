@@ -697,7 +697,7 @@ private:
 				cout << "Warming up..." << endl;
 			else
 				cout << "Trial " << i << "... " << flush;
-			this_thread::sleep_for(chrono::seconds(i ? _trialDuration : _warmupDuration));
+			this_thread::sleep_for(std::chrono::seconds(i ? _trialDuration : _warmupDuration));
 
 			auto mp = f.miningProgress();
 			if (!i)
@@ -769,7 +769,7 @@ private:
 				auto mp = f.miningProgress();
 
 				cnote << "Mining on difficulty " << difficulty << " " << mp;
-				this_thread::sleep_for(chrono::milliseconds(1000));
+				this_thread::sleep_for(std::chrono::milliseconds(1000));
 				time++;
 			}
 			cnote << "Difficulty:" << difficulty << "  Nonce:" << solution.nonce;
@@ -891,7 +891,7 @@ private:
 						f.setWork(current);
 						x_current.unlock();
 					}
-					this_thread::sleep_for(chrono::milliseconds(_recheckPeriod));
+					this_thread::sleep_for(std::chrono::milliseconds(_recheckPeriod));
 				}
 				bool ok = prpc->eth_submitWork("0x" + toHex(solution.nonce), "0x" + toString(solution.headerHash), "0x" + toString(solution.mixHash));
 				if (ok) {
@@ -915,7 +915,7 @@ private:
 			{
 				if (m_maxFarmRetries > 0)
 				{
-					for (auto i = 3; --i; this_thread::sleep_for(chrono::seconds(1)))
+					for (auto i = 3; --i; this_thread::sleep_for(std::chrono::seconds(1)))
 						cerr << "JSON-RPC problem. Probably couldn't connect. Retrying in " << i << "... \r";
 					cerr << endl;
 				}
@@ -1033,7 +1033,7 @@ private:
   					mst.updateStat(token, worker, m_farmURL, mp.rate(), f.getSolutionStats().getAccepts(), f.getSolutionStats().getRejects());
   				}
 				
-				this_thread::sleep_for(chrono::milliseconds(m_farmRecheckPeriod));
+				this_thread::sleep_for(std::chrono::milliseconds(m_farmRecheckPeriod));
 			}
 		}
 		else if (m_stratumClientVersion == 2) {
@@ -1094,7 +1094,7 @@ private:
   					mst.updateStat(token, worker, m_farmURL, mp.rate(), f.getSolutionStats().getAccepts(), f.getSolutionStats().getRejects());
   				}
 				
-				this_thread::sleep_for(chrono::milliseconds(m_farmRecheckPeriod));
+				this_thread::sleep_for(std::chrono::milliseconds(m_farmRecheckPeriod));
 			}
 		}
 
